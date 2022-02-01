@@ -33,24 +33,23 @@ def parse_2d_image(record, target_res):
 
 def parse_3d_image(record, target_res, labels_exist=False):
     image_feature_description = {
-        'img': tf.io.FixedLenFeature([], tf.string),
-        'shape': tf.io.FixedLenFeature([4], tf.int64)
-        
+        'img': tf.FixedLenFeature([], tf.string),
+        'shape': tf.FixedLenFeature([4], tf.int64)
     }
+
     if labels_exist:
-        image_feature_description['label'] = tf.io.FixedLenFeature([], tf.int64)
-    data = tf.io.parse_single_example(record, image_feature_description)
+        image_feature_description['label'] = tf.FixedLenFeature([], tf.int64)
+    data = tf.parse_single_example(record, image_feature_description)
     img = data['img']
-    img = tf.io.decode_raw(img, tf.uint8)
-    img = tf.cast(img, tf.float32)
-    # img = tf.reshape(img, data['shape'])
-    img = tf.reshape(img, (2**target_res, 2**target_res, 2**target_res, data['shape'][-1]))
+    img = tf.decode_raw(img, tf.float32)
+    img = tf.reshape(img, data['shape'])
+    # img = tf.reshape(img, (2**target_res, 2**target_res, 2**target_res, data['shape'][-1]))
 
     shape = tf.cast(data['shape'], tf.float32)
 
     full_res = tf.cast(tf.math.log(shape[0])/tf.math.log(2.0), tf.int32)
 
-    img = adjust_dynamic_range(img, [0.0, 255.0], [-1.0, 1.0])
+    img = adjust_dynamic_range(img, [0.0, 1.0], [-1.0, 1.0])
 
     if labels_exist:
         label = data['label']
