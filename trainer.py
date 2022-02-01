@@ -372,9 +372,9 @@ class PGGAN(tf.Module):
         for i in range(num_samples):
             latents = self.sample_random_latents(batch_size=1, label=i%2)
             fakes = self.train_generator([latents, 1.0])
-            fakes = utils.adjust_dynamic_range(fakes, [-1.0, 1.0], [0.0, 255.0])
-            fakes = tf.clip_by_value(fakes, 0.0, 255.0)
-            img_arr = np.squeeze(np.array(fakes[0])).astype(np.uint8)
+            fakes = utils.adjust_dynamic_range(fakes, [-1.0, 1.0], [0.0, 1.0])
+            fakes = tf.clip_by_value(fakes, 0.0, 1.0)
+            img_arr = np.squeeze(np.array(fakes[0])).astype(np.float32)
             mri = nib.Nifti1Image(img_arr, np.eye(4))
             nib.save(mri, str(self.generated_dir.joinpath('res_{}_{}.nii.gz'.format(current_resolution, i))))
 
