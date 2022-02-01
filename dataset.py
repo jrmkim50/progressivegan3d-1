@@ -24,7 +24,7 @@ def serialize_example(img, shape, label):
 
 
 def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_img_per_shard, 
-    start_resolution=4, target_resolution=256):
+    start_resolution=4, target_resolution=128):
 
     dataset_dir = Path(dataset_dir)
     img_filenames = list(dataset_dir.glob(glob_ext))
