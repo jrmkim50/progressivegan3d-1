@@ -18,7 +18,6 @@ def serialize_example(img, shape, label):
         'shape' : _int64_feature(shape),
         'label' : _int64_feature([label])
     }
-
     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
     return example_proto.SerializeToString()
 
@@ -50,10 +49,9 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
 
     start_resolution_log = int(np.log2(start_resolution))
     target_resolution_log = int(np.log2(target_resolution))
+
     # resolutions equals [4,8,16,32,64,128]
     resolutions = [2**res for res in range(start_resolution_log, target_resolution_log+1)]
-
-    tf_record_filenames = []
 
     for shard in range(n_shards):
         print('Creating {} / {} shard '.format(shard+1, n_shards))
@@ -69,8 +67,7 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
             img = nib.load(str(f))
             img = nib.as_closest_canonical(img)
             img_data = img.get_fdata()
-            img_data = (255 * (img_data - np.min(img_data)) / (np.max(img_data) - np.min(img_data)))
-            img_shape = np.array(img_data.shape).astype(np.int64)
+            img_shape = img_data.shape.astype(np.int64)
 
             if len(img_shape) == 3:
                 img_data = np.expand_dims(img_data, axis=-1)
@@ -79,30 +76,22 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
                 img_shape = np.append(img_shape, 1)
 
             img_label = -1
-            
-            ## Write img label code here if used
-            # if 'T1' in str(f):
-            #     img_label=0
-            # elif 'T2' in str(f):
-            #     img_label=1
-            # else:
-            #     raise ValueError('Label does not exist')
 
-            img_data_raveled = img_data.astype(np.uint8).ravel().tostring()
-            tf_record_writers[target_resolution].write(serialize_example(img_data_raveled, img_shape, img_label))
+            quant = img_data.clip(0, 1.0).astype(np.float32).tobytes()
+            tf_record_writers[target_resolution].write(serialize_example(quant, img_shape, img_label))
 
             for res in range(2, target_resolution_log):
                 img_data = img_data[0::2,0::2,0::2,:]+img_data[0::2,0::2,1::2,:]+img_data[0::2,1::2,0::2,:]+img_data[0::2,1::2,1::2,:] \
                                 +img_data[1::2,0::2,0::2,:]+img_data[1::2,0::2,1::2,:]+img_data[1::2,1::2,0::2,:]+img_data[1::2,1::2,1::2,:]
-                img_data = (img_data) * 0.125
-                img_data = (255 * (img_data - np.min(img_data)) / (np.max(img_data) - np.min(img_data)))
+                img_data = img_data * 0.125
 
                 actual_resolution_log = target_resolution_log-res+1
                 actual_resolution = 2**actual_resolution_log
 
-                img_data_raveled = img_data.astype(np.uint8).ravel().tostring()
+                quant = img_data.clip(0, 1.0).astype(np.float32).tobytes()
+                img_shape = img_data.shape.astype(np.int64)
 
-                tf_record_writers[actual_resolution].write(serialize_example(img_data_raveled, img_shape, img_label))
+                tf_record_writers[actual_resolution].write(serialize_example(quant, img_shape, img_label))
 
             img_count+=1
             print('{} / {} images done'.format(img_count, n_images))
