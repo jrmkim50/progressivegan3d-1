@@ -50,6 +50,7 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
 
     start_resolution_log = int(np.log2(start_resolution))
     target_resolution_log = int(np.log2(target_resolution))
+    # resolutions equals [4,8,16,32,64,128]
     resolutions = [2**res for res in range(start_resolution_log, target_resolution_log+1)]
 
     tf_record_filenames = []
