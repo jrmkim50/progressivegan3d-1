@@ -67,7 +67,7 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
             img = nib.load(str(f))
             img = nib.as_closest_canonical(img)
             img_data = img.get_fdata()
-            img_shape = img_data.shape.astype(np.int64)
+            img_shape = np.array(img_data.shape).astype(np.int64)
 
             if len(img_shape) == 3:
                 img_data = np.expand_dims(img_data, axis=-1)
@@ -89,7 +89,7 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
                 actual_resolution = 2**actual_resolution_log
 
                 quant = img_data.clip(0, 1.0).astype(np.float32).tobytes()
-                img_shape = img_data.shape.astype(np.int64)
+                img_shape = np.array(img_data.shape).astype(np.int64)
 
                 tf_record_writers[actual_resolution].write(serialize_example(quant, img_shape, img_label))
 
