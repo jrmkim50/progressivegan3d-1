@@ -316,7 +316,7 @@ class PGGAN(tf.Module):
                     d_loss = d_train_step(latents, reals, labels, alpha)
                 d_loss_tracker.update_state(d_loss)
 
-                prog_bar.add(batch_size, [('G Loss', g_loss_tracker.result().numpy()), ('D Loss', d_loss_tracker.result().numpy())])
+                prog_bar.add(batch_size, [('G Loss', g_loss_tracker.result()), ('D Loss', d_loss_tracker.result())])
                 i+=1
 
             if phase == 'Resolution':
