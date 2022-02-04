@@ -3,7 +3,6 @@ import time
 
 import numpy as np
 import tensorflow as tf
-from PIL import Image
 import nibabel as nib
 
 def _bytes_feature(value):

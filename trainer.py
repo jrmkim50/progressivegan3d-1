@@ -3,7 +3,6 @@ from functools import partial
 import time
 
 import numpy as np
-from PIL import Image
 import tensorflow as tf
 
 # tf.debugging.set_log_device_placement(True)
@@ -357,16 +356,6 @@ class PGGAN(tf.Module):
     def save_models(self, current_resolution):
         self.train_generator.save(str(self.model_dir.joinpath('g_{}.h5'.format(current_resolution))))
         self.train_discriminator.save(str(self.model_dir.joinpath('d_{}.h5'.format(current_resolution))))
-
-    def generate_samples(self, num_samples, current_resolution):
-        for i in range(num_samples):
-            latents = tf.random.normal((1, self.latent_size)) 
-            fakes = self.train_generator([latents, 1.0])
-            fakes = utils.adjust_dynamic_range(fakes, [-1.0, 1.0], [0.0, 255.0])
-            fakes = tf.clip_by_value(fakes, 0.0, 255.0)
-            img_arr = np.squeeze(np.array(fakes[0])).astype(np.uint8)
-            im = Image.fromarray(img_arr, 'L')
-            im.save(str(self.generated_dir.joinpath('res_{}_{}.jpg'.format(current_resolution, i))))
 
     def generate_samples_3d(self, num_samples, current_resolution):
         for i in range(num_samples):
