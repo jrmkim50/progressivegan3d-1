@@ -74,6 +74,7 @@ def get_dataset(tf_record_dir, res, batch_size, dimensionality, labels_exist=Fal
         dataset = dataset.map(lambda x: parse_image(x, target_res=res, dimensionality=dimensionality, labels_exist=labels_exist), 
                     num_parallel_calls=tf.data.experimental.AUTOTUNE)
         dataset = dataset.shuffle(100)
+        dataset = dataset.repeat()
         dataset = dataset.batch(batch_size, drop_remainder=True)
         dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
         return dataset
