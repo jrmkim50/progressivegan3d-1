@@ -292,7 +292,8 @@ class PGGAN(tf.Module):
 
             i = 0
 
-            for reals, labels in dataset:
+            for reals in dataset:
+                labels = None
                 iters_done+=batch_size
 
                 if iters_done > iters_total:
