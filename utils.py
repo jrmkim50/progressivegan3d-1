@@ -33,15 +33,15 @@ def parse_2d_image(record, target_res):
 
 def parse_3d_image(record, target_res, labels_exist=False):
     image_feature_description = {
-        'img': tf.FixedLenFeature([], tf.string),
-        'shape': tf.FixedLenFeature([4], tf.int64)
+        'img': tf.io.FixedLenFeature([], tf.string),
+        'shape': tf.io.FixedLenFeature([4], tf.int64)
     }
 
     if labels_exist:
-        image_feature_description['label'] = tf.FixedLenFeature([], tf.int64)
-    data = tf.parse_single_example(record, image_feature_description)
+        image_feature_description['label'] = tf.io.FixedLenFeature([], tf.int64)
+    data = tf.io.parse_single_example(record, image_feature_description)
     img = data['img']
-    img = tf.decode_raw(img, tf.float32)
+    img = tf.io.decode_raw(img, tf.float32)
     img = tf.reshape(img, data['shape'])
     # img = tf.reshape(img, (2**target_res, 2**target_res, 2**target_res, data['shape'][-1]))
 
@@ -70,7 +70,7 @@ def get_dataset(tf_record_dir, res, batch_size, dimensionality, labels_exist=Fal
         dataset = tf.data.Dataset.list_files(os.path.join(tf_record_dir, 'resolution-%03d-*.tfrecord'%(2**(res))))
 
         dataset = dataset.shuffle(20)
-        dataset = dataset.interleave(lambda file: tf.data.TFRecordDataset(file, compression_type=tf.python_io.TFRecordCompressionType.NONE),
+        dataset = dataset.interleave(lambda file: tf.data.TFRecordDataset(file, compression_type='GZIP'),
                          cycle_length=tf.data.experimental.AUTOTUNE, block_length=4)
         dataset = dataset.map(lambda x: parse_image(x, target_res=res, dimensionality=dimensionality, labels_exist=labels_exist), 
                     num_parallel_calls=tf.data.experimental.AUTOTUNE)

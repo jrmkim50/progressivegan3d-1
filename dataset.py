@@ -31,7 +31,7 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
     tf_record_save_dir = Path(tf_record_save_dir)
     tf_record_save_dir.mkdir(parents=True, exist_ok=False)
 
-    tf_record_writer_options = tf.python_io.TFRecordOptions(compression_type=tf.python_io.TFRecordCompressionType.NONE)
+    tf_record_writer_options = tf.io.TFRecordOptions(compression_type='GZIP')
 
     n_images = len(img_filenames)
     n_shards = n_images//n_img_per_shard+1
@@ -61,12 +61,13 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
             tf_record_filename =  str(tf_record_save_dir.joinpath('resolution-%03d-data-%03d-of-%03d.tfrecord'%(res,
                 shard+1, n_shards)))
 
-            tf_record_writers[res] = tf.python_io.TFRecordWriter(tf_record_filename, options=tf_record_writer_options)
+            tf_record_writers[res] = tf.io.TFRecordWriter(tf_record_filename, options=tf_record_writer_options)
 
         for e, f in enumerate(img_filenames[img_count:img_count+n_img_per_shard]):
             img = nib.load(str(f))
             img = nib.as_closest_canonical(img)
             img_data = img.get_fdata()
+            img_data = (img_data - np.min(img_data)) / (np.max(img_data) - np.min(img_data))
             img_shape = np.array(img_data.shape).astype(np.int64)
 
             if len(img_shape) == 3:
@@ -84,6 +85,7 @@ def prepare_3d_tf_record_dataset(dataset_dir, tf_record_save_dir, glob_ext, n_im
                 img_data = img_data[0::2,0::2,0::2,:]+img_data[0::2,0::2,1::2,:]+img_data[0::2,1::2,0::2,:]+img_data[0::2,1::2,1::2,:] \
                                 +img_data[1::2,0::2,0::2,:]+img_data[1::2,0::2,1::2,:]+img_data[1::2,1::2,0::2,:]+img_data[1::2,1::2,1::2,:]
                 img_data = img_data * 0.125
+                img_data = (img_data - np.min(img_data)) / (np.max(img_data) - np.min(img_data))
 
                 actual_resolution_log = target_resolution_log-res+1
                 actual_resolution = 2**actual_resolution_log

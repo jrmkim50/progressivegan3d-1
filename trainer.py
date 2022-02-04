@@ -57,7 +57,7 @@ class PGGAN(tf.Module):
         self.generated_dir.mkdir(exist_ok=True)
         self.model_dir.mkdir(exist_ok=True)
 
-        self.train_summary_writer = tf.contrib.summary.create_file_writer(str(self.log_dir))
+        self.train_summary_writer = tf.summary.create_file_writer(str(self.log_dir))
 
         current_resolution = 2
         self.add_resolution()
