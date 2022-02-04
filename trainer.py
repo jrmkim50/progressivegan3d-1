@@ -336,6 +336,9 @@ class PGGAN(tf.Module):
 
         current_resolution = int(np.log2(self.start_resolution))
         while 2**current_resolution < self.target_resolution:
+            print('Resolution Phase')
+            self.run_phase(phase='Resolution', current_resolution=current_resolution)
+
             if self.strategy is not None:
                 with self.strategy.scope():
                     current_resolution += 1
@@ -346,9 +349,6 @@ class PGGAN(tf.Module):
 
             print('Transition Phase')
             self.run_phase(phase='Transition', current_resolution=current_resolution)
-
-            print('Resolution Phase')
-            self.run_phase(phase='Resolution', current_resolution=current_resolution)
                 
     def infer(self, latents):
         raise NotImplementedError
