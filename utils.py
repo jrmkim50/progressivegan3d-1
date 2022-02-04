@@ -80,9 +80,9 @@ def get_dataset(tf_record_dir, res, batch_size, dimensionality, labels_exist=Fal
         return dataset
 
 def save_generated_mri(generated, filename, dynamic_range=[-1, 1]):
-    generated = adjust_dynamic_range(generated, dynamic_range, [0.0, 255.0])
-    generated = tf.clip_by_value(generated, 0.0, 255.0)
-    img_arr = np.squeeze(np.array(generated)).astype(np.uint8)
+    generated = adjust_dynamic_range(generated, dynamic_range, [0.0, 1.0])
+    generated = tf.clip_by_value(generated, 0.0, 1.0)
+    img_arr = np.squeeze(np.array(generated)).astype(np.float32)
     mri = nib.Nifti1Image(img_arr, np.eye(4))
     nib.save(mri, filename)
 
