@@ -10,7 +10,7 @@ import utils
 
 def main(config):
 
-    # tf.enable_eager_execution()
+    tf.enable_eager_execution()
 
     if config.task == 'prepare':
         print('Preparing ...')

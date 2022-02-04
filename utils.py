@@ -70,13 +70,13 @@ def get_dataset(tf_record_dir, res, batch_size, dimensionality, labels_exist=Fal
         dataset = tf.data.Dataset.list_files(os.path.join(tf_record_dir, 'resolution-%03d-*.tfrecord'%(2**(res))))
 
         dataset = dataset.shuffle(20)
-        dataset = dataset.interleave(lambda file: tf.data.TFRecordDataset(file, compression_type='GZIP'),
-                         cycle_length=tf.data.experimental.AUTOTUNE, block_length=4)
+        dataset = dataset.interleave(lambda file: tf.data.TFRecordDataset(file, compression_type=tf.python_io.TFRecordCompressionType.NONE),
+                         cycle_length=None, block_length=4)
         dataset = dataset.map(lambda x: parse_image(x, target_res=res, dimensionality=dimensionality, labels_exist=labels_exist), 
-                    num_parallel_calls=tf.data.experimental.AUTOTUNE)
+                    num_parallel_calls=None)
         dataset = dataset.shuffle(100)
         dataset = dataset.batch(batch_size, drop_remainder=True)
-        dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+        dataset = dataset.prefetch(buffer_size=None)
         return dataset
 
 def save_generated_mri(generated, filename, dynamic_range=[-1, 1]):
