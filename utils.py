@@ -3,7 +3,6 @@ import numpy as np
 import tensorflow as tf
 import nibabel as nib
 from pathlib import Path
-import scipy
 
 def adjust_dynamic_range(data, drange_in, drange_out):
     if drange_in != drange_out:
