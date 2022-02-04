@@ -10,6 +10,8 @@ import utils
 
 def main(config):
 
+    tf.enable_eager_execution()
+    
     if config.task == 'prepare':
         print('Preparing ...')
         dataset.prepare_tf_record_dataset(
