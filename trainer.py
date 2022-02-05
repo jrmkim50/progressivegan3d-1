@@ -349,6 +349,8 @@ class PGGAN(tf.Module):
 
             print('Transition Phase')
             self.run_phase(phase='Transition', current_resolution=current_resolution)
+        print('Final Resolution Phase')
+        self.run_phase(phase='Resolution', current_resolution=current_resolution)
                 
     def infer(self, latents):
         raise NotImplementedError
