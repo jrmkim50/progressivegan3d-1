@@ -36,8 +36,8 @@ class Opts:
         self.parser_train.add_argument('--num_channels', default=1, type=int, help='Number of channels in images')
         self.parser_train.add_argument('--num_classes', default=1, type=int, help='Number of classes (only 1 supported')
 
-        self.parser_train.add_argument('--kiters_per_transition', default=0, type=float, help='x*1000 iterations per transition, leave it zero to use resolution specific iters')
-        self.parser_train.add_argument('--kiters_per_resolution', default=0, type=float, help='x*1000 iterations per resolution, leave it zero to use resolution specific iters')
+        self.parser_train.add_argument('--kiters_per_transition', default=500, type=float, help='x*1000 iterations per transition, leave it zero to use resolution specific iters')
+        self.parser_train.add_argument('--kiters_per_resolution', default=500, type=float, help='x*1000 iterations per resolution, leave it zero to use resolution specific iters')
         self.parser_train.add_argument('--start_resolution', default=4, type=int, help='start resolution')
         self.parser_train.add_argument('--target_resolution', default=128, type=int, help='target resolution')
         # self.parser_train.add_argument('--resolution_batch_size')
