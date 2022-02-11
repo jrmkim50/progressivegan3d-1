@@ -90,17 +90,17 @@ class Opts:
 
             config.img_ext = 'jpg' if config.dimensionality == 2 else 'nii.gz'
 
-            config.resolution_batch_size = {4: 64, 8: 32, 16: 16, 32: 8, 64: 4, 128: 2, 256: 1} # per gpu
+            config.resolution_batch_size = {4: 64, 8: 32, 16: 16, 32: 16, 64: 4, 128: 2, 256: 1} # per gpu
             # config.resolution_batch_size = {4: 1024, 8: 512, 16: 128, 32: 32, 64: 8, 128: 8} # per gpu
 
             if config.kiters_per_transition == 0:
-                config.kiters_per_transition = {4: 80, 8: 100, 16: 120, 32: 140, 64: 160, 128: 180, 256: 200}
+                config.kiters_per_transition = {4: 80, 8: 100, 16: 100, 32: 100, 64: 100, 128: 180, 256: 200}
             else:
                 config.kiters_per_transition = {k: config.kiters_per_transition 
                     for k in [2**i for i in range(int(np.log2(config.target_resolution))+1)]}
 
             if config.kiters_per_resolution == 0:
-                config.kiters_per_resolution = {4: 80, 8: 100, 16: 120, 32: 140, 64: 160, 128: 180, 256: 200}
+                config.kiters_per_resolution = {4: 80, 8: 100, 16: 100, 32: 100, 64: 100, 128: 180, 256: 200}
             else:
                 config.kiters_per_resolution = {k: config.kiters_per_resolution 
                     for k in [2**i for i in range(int(np.log2(config.target_resolution))+1)]}
