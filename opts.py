@@ -48,6 +48,8 @@ class Opts:
 
         self.parser_train.add_argument('--d_fmap_base', default=2048, type=int, help='Discriminator fmap base')
         self.parser_train.add_argument('--g_fmap_base', default=2048, type=int, help='Generator fmap base')
+        self.parser_train.add_argument('--d_fmap_max', default=256, type=int, help='Discriminator fmap base')
+        self.parser_train.add_argument('--g_fmap_max', default=256, type=int, help='Generator fmap base')
 
 
         # Generate Task

@@ -43,9 +43,9 @@ class PGGAN(tf.Module):
         self.img_ext = config.img_ext
 
         self.generator = networks.Generator(self.latent_size, dimensionality=self.dimensionality, 
-            num_channels=self.num_channels, fmap_base=config.g_fmap_base)
+            num_channels=self.num_channels, fmap_base=config.g_fmap_base, fmap_max=config.g_fmap_max)
         self.discriminator = networks.Discriminator(self.label_size, dimensionality=self.dimensionality, 
-            num_channels=self.num_channels, fmap_base=config.d_fmap_base)
+            num_channels=self.num_channels, fmap_base=config.d_fmap_base, fmap_max=config.d_fmap_max)
 
         self.run_id = Path(config.run_id)
         self.generated_dir = self.run_id.joinpath(config.generated_dir)
