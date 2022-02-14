@@ -89,10 +89,6 @@ class Opts:
                 gpus = tf.config.experimental.list_physical_devices('GPU')
                 tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
                 config.strategy = None
-            
-            physical_devices = tf.config.list_physical_devices('GPU') 
-            for device in physical_devices:
-                tf.config.experimental.set_memory_growth(device, True)
 
             config.img_ext = 'jpg' if config.dimensionality == 2 else 'nii.gz'
 
