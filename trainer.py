@@ -81,10 +81,10 @@ class PGGAN(tf.Module):
                     self.add_resolution()
                     current_resolution+=1
 
-                if (current_resolution <= 4):
-                    print("Loading weights from ", self.model_dir.joinpath('g_{}.h5'.format(current_resolution)))
-                    self.generator.train_generator.load_weights(str(self.model_dir.joinpath('g_{}.h5'.format(current_resolution))))
-                    self.discriminator.train_discriminator.load_weights(str(self.model_dir.joinpath('d_{}.h5'.format(current_resolution))))
+        if (current_resolution <= 4):
+            print("Loading weights from ", self.model_dir.joinpath('g_{}.h5'.format(current_resolution)))
+            self.generator.train_generator.load_weights(str(self.model_dir.joinpath('g_{}.h5'.format(current_resolution))))
+            self.discriminator.train_discriminator.load_weights(str(self.model_dir.joinpath('d_{}.h5'.format(current_resolution))))
 
 
     # TODO: Write decorator
