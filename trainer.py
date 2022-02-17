@@ -81,7 +81,7 @@ class PGGAN(tf.Module):
                     self.add_resolution()
                     current_resolution+=1
 
-        if (current_resolution <= 4):
+        if (current_resolution <= 5):
             print("Loading weights from ", self.model_dir.joinpath('g_{}.h5'.format(current_resolution)))
             self.generator.train_generator.load_weights(str(self.model_dir.joinpath('g_{}.h5'.format(current_resolution))))
             self.discriminator.train_discriminator.load_weights(str(self.model_dir.joinpath('d_{}.h5'.format(current_resolution))))
@@ -338,8 +338,8 @@ class PGGAN(tf.Module):
 
         current_resolution = int(np.log2(self.start_resolution))
         while 2**current_resolution < self.target_resolution:
-            print('Resolution Phase')
-            self.run_phase(phase='Resolution', current_resolution=current_resolution)
+            # print('Resolution Phase')
+            # self.run_phase(phase='Resolution', current_resolution=current_resolution)
 
             if self.strategy is not None:
                 with self.strategy.scope():
