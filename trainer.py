@@ -81,6 +81,8 @@ class PGGAN(tf.Module):
                     self.add_resolution()
                     current_resolution+=1
 
+        # TODO: Change resolution to correct resolution to resume from.
+        # If you resume from resolution 5, resume from the g_5 model weights, etc.
         if (current_resolution <= 5):
             print("Loading weights from ", self.model_dir.joinpath('g_{}.h5'.format(current_resolution)))
             self.generator.train_generator.load_weights(str(self.model_dir.joinpath('g_{}.h5'.format(current_resolution))))
@@ -338,6 +340,8 @@ class PGGAN(tf.Module):
 
         current_resolution = int(np.log2(self.start_resolution))
         while 2**current_resolution < self.target_resolution:
+            # TODO: Uncomment when training a fresh model.
+            # This is commented because I do not need to redo the resolution phase when resuming training.
             # print('Resolution Phase')
             # self.run_phase(phase='Resolution', current_resolution=current_resolution)
 
